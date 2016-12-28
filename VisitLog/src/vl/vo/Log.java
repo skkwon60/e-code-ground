@@ -3,15 +3,15 @@ package vl.vo;
 import java.util.Date;
 
 public class Log {
-	protected String name;
+	protected String password;
 	protected String email;
 	protected int no;
 	protected String body;
 	protected Date cre_date;
 	protected Date mod_date;
 	
-	public Log setName(String name){
-		this.name = name;
+	public Log setPassword(String password){
+		this.password = password;
 		return this;
 	}
 	public Log setEmail(String email){
@@ -34,8 +34,8 @@ public class Log {
 		this.mod_date = mod_date;
 		return this;
 	}
-	public String getName(){
-		return this.name;
+	public String getPassword(){
+		return this.password;
 	}
 	public String getEmail(){
 		return this.email;

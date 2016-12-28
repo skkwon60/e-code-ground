@@ -1,9 +1,12 @@
 package vl.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+
+import javax.servlet.ServletContext;
 
 import vl.vo.Log;
 
@@ -28,7 +31,7 @@ public class LogDao {
 						.setCreatedDate(rs.getDate("CRE_DATE"))
 						.setEmail(rs.getString("EMAIL"))
 						.setModifiedDate(rs.getDate("MOD_DATE"))
-						.setName(rs.getString("name"))
+						.setPassword(rs.getString("PWD"))
 						.setNo(rs.getInt("MNO")));
 			}
 			
@@ -39,6 +42,55 @@ public class LogDao {
 		} finally {
 		    try {if (rs != null) rs.close();} catch(Exception e) {}
 		    try {if (stmt != null) stmt.close();} catch(Exception e) {}
+		}
+	}
+	
+	public int enterNewLog(Log log) throws Exception{
+		PreparedStatement stmt = null;
+		
+		try{
+			stmt = connection.prepareStatement(
+					"INSERT INTO visitlist(EMAIL,PWD,BODY,CRE_DATE,MOD_DATE)"
+					+ " value(?,?,?,now(),now())");
+			stmt.setString(1, log.getEmail());
+			stmt.setString(2, log.getPassword());
+			stmt.setString(3, log.getBody());
+			
+			return stmt.executeUpdate();
+			
+		} catch(Exception e){
+			throw e;
+			
+		} finally {
+			try {if (stmt != null) stmt.close();} catch(Exception e) {}
+		}
+	}
+	
+	public Log selectUser(int no) throws Exception{
+		Statement stmt = null;
+		ResultSet rs = null;
+		
+		try{
+			Log log = new Log();
+			stmt = connection.createStatement();
+			rs = stmt.executeQuery(
+					"SELECT * FROM visitlist WHERE MNO=" + no);
+			
+			rs.next();
+			log.setBody(rs.getString("BODY"))
+				.setEmail(rs.getString("EMAIL"))
+				.setPassword(rs.getString("PWD"))
+				.setCreatedDate(rs.getDate("CRE_DATE"))
+				.setModifiedDate(rs.getDate("MOD_DATE"));
+			
+			return log;
+			
+		} catch (Exception e){
+			throw e;
+			
+		} finally {
+			try {if (stmt != null) stmt.close();} catch(Exception e) {}
+			try {if (rs != null) rs.close();} catch(Exception e) {}
 		}
 	}
 }
