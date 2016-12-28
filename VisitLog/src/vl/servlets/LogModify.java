@@ -22,6 +22,7 @@ public class LogModify extends HttpServlet {
 					throws ServletException, IOException{
 		
 		try{
+			response.setContentType("text/html; charset=UTF-8");
 			RequestDispatcher rd = request.getRequestDispatcher("/visitlog/ModifyPage.jsp");
 			rd.include(request, response);
 			

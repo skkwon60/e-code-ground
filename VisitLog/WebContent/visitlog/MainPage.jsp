@@ -29,7 +29,7 @@ padding:10px 10px;}
 <%=log.getBody() %>
 </div>
 최근 수정 시간 <%=log.getModifiedDate() %>, 등록 시간 <%=log.getCreatedDate() %><br>
-<a href="/manage/pwdCheck?no=${log.no}">수정하기</a><br>
+<a href="../manage/pwdCheck?no=<%=log.getNo() %>">수정하기</a><br>
 <%} %>
 <jsp:include page="/Tail.jsp"/>
 </body>

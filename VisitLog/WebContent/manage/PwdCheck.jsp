@@ -12,7 +12,7 @@
 Email: <input type='text' name='email' value='${log.email}' readonly><br>
 Password:  <input type='text' name='password'><br>
 <input type='submit' name='제출' value='승인 요청'>
-<input type='button' name='취소' value='취소' onclick='location.href=\"/visitlog/mainpage\"'>
+<input type='button' name='취소' value='취소' onclick='location.href="../visitlog/mainpage"'>
 </form>
 </body>
 </html>

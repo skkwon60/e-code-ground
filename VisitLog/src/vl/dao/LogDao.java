@@ -93,4 +93,32 @@ public class LogDao {
 			try {if (rs != null) rs.close();} catch(Exception e) {}
 		}
 	}
+	
+	public Log checkPwdCorrect(String email, String password) throws Exception{
+		Statement stmt = null;
+		ResultSet rs = null;
+		
+		Log log = null;
+
+		try{
+			stmt = connection.createStatement();
+			rs = stmt.executeQuery(
+					"SELECT * FROM visitlist where EMAIL=\"" + email + "\" AND PWD=\"" + password + "\"");
+			
+			if(rs.next()){
+				log = new Log();
+				log.setEmail(rs.getString("EMAIL"));
+			}
+			
+			return log;
+			
+		} catch(Exception e){
+			throw e;
+			
+		} finally {
+			try {if (stmt != null) stmt.close();} catch(Exception e) {}
+			try {if (rs != null) rs.close();} catch(Exception e) {}
+		}
+		
+	}
 }
