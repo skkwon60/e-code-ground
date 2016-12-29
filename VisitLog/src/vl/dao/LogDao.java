@@ -107,7 +107,7 @@ public class LogDao {
 			
 			if(rs.next()){
 				log = new Log();
-				log.setEmail(rs.getString("EMAIL"));
+				log.setEmail(rs.getString("EMAIL")).setNo(rs.getInt("MNO"));
 			}
 			
 			return log;
@@ -119,6 +119,24 @@ public class LogDao {
 			try {if (stmt != null) stmt.close();} catch(Exception e) {}
 			try {if (rs != null) rs.close();} catch(Exception e) {}
 		}
+	}
+	
+	public void modifyBody(Log log) throws Exception{
+		PreparedStatement stmt = null;
 		
+		try{
+			stmt = connection.prepareStatement(
+					"UPDATE visitlist set BODY=?,MOD_DATE=now() WHERE MNO=?");
+			stmt.setString(1, log.getBody());
+			stmt.setInt(2, log.getNo());
+			
+			stmt.executeUpdate();
+			
+		} catch (Exception e){
+			throw e;
+			
+		} finally {
+			try {if (stmt != null) stmt.close();} catch(Exception e) {}
+		}
 	}
 }

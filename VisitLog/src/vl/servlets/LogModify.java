@@ -9,8 +9,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import vl.dao.LogDao;
+import vl.vo.Log;
 
 @WebServlet("/visitlog/modify")
 public class LogModify extends HttpServlet {
@@ -38,7 +40,16 @@ public class LogModify extends HttpServlet {
 		
 		try{
 			ServletContext sc = this.getServletContext();
-			LogDao logDag = (LogDao)sc.getAttribute("LogDao");
+			LogDao logDao = (LogDao)sc.getAttribute("LogDao");
+			
+			System.out.println("AppInitServlet 준비…2");
+			
+			logDao.modifyBody(new Log()
+					.setBody(request.getParameter("body"))
+					.setNo(Integer.parseInt(request.getParameter("no"))));
+			
+			response.sendRedirect("mainpage");
+			
 		} catch (Exception e){
 			e.printStackTrace();
 		}
