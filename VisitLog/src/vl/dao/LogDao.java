@@ -39,6 +39,7 @@ public class LogDao {
 			
 		} catch (Exception e){
 			throw e;
+			
 		} finally {
 		    try {if (rs != null) rs.close();} catch(Exception e) {}
 		    try {if (stmt != null) stmt.close();} catch(Exception e) {}
