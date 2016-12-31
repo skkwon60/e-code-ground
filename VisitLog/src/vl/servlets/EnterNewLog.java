@@ -1,6 +1,7 @@
 package vl.servlets;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -26,6 +27,9 @@ public class EnterNewLog extends HttpServlet{
 			rd.include(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
+			response.setContentType("text/html; charset=UTF-8");
+			RequestDispatcher rd = request.getRequestDispatcher("/DKnowError.jsp");
+			rd.forward(request, response);
 		}
 	}
 	
@@ -37,16 +41,65 @@ public class EnterNewLog extends HttpServlet{
 			LogDao logDao = (LogDao)sc.getAttribute("LogDao");
 			
 			Log log = new Log();
-			log.setBody(request.getParameter("body"))
-				.setEmail(request.getParameter("email"))
-				.setPassword(request.getParameter("password"));
 			
-			logDao.enterNewLog(log);
+			String re = "^[a-zA-Z0-9_\\.]+@[a-zA-Z0-9]+(\\.[a-zA-Z0-9]{2,4}){1,2}$";
+			String ws = "\\s";
 			
-			response.sendRedirect("mainpage");
+			String email = request.getParameter("email");
+			String password = request.getParameter("password");
+			String body = request.getParameter("body");
+			
+			email = email.trim();
+			
+			if(email == null || password == null || body == null){
+				response.setContentType("text/html; charset=UTF-8");
+				RequestDispatcher rd = request.getRequestDispatcher("/Error.jsp");
+				String e = "NullError";
+				request.setAttribute("e", e);
+				rd.forward(request, response);
+			}
+			else if(!email.matches(re)){
+				response.setContentType("text/html; charset=UTF-8");
+				RequestDispatcher rd = request.getRequestDispatcher("/Error.jsp");
+				String e = "EmailError";
+				request.setAttribute("e", e);
+				rd.forward(request, response);
+			}
+			else if(email == "" || password == "" || body == ""){
+				response.setContentType("text/html; charset=UTF-8");
+				RequestDispatcher rd = request.getRequestDispatcher("/Error.jsp");
+				String e = "NoValueError";
+				request.setAttribute("e", e);
+				rd.forward(request, response);
+			}
+			else if(password.matches(ws)){
+				response.setContentType("text/html; charset=UTF-8");
+				RequestDispatcher rd = request.getRequestDispatcher("/Error.jsp");
+				String e = "SpaceInPwd";
+				request.setAttribute("e", e);
+				rd.forward(request, response);
+			}
+			
+			log.setBody(body)
+				.setEmail(email)
+				.setPassword(password);
+			
+			if(logDao.enterNewLog(log)){
+				response.sendRedirect("mainpage");
+			}
+			else{
+				response.setContentType("text/html; charset=UTF-8");
+				RequestDispatcher rd = request.getRequestDispatcher("/Error.jsp");
+				String e = "EmailDupError";
+				request.setAttribute("e", e);
+				rd.forward(request, response);
+			}
 			
 		} catch (Exception e){
 			e.printStackTrace();
+			response.setContentType("text/html; charset=UTF-8");
+			RequestDispatcher rd = request.getRequestDispatcher("/DKnowError.jsp");
+			rd.forward(request, response);
 		}
 	}
 }

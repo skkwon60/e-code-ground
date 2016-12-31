@@ -53,7 +53,7 @@ public class LogInPage extends HttpServlet{
 				HttpSession session = request.getSession();
 				session.setAttribute("log", log);
 				response.sendRedirect("../visitlog/modify");
-				
+				logDao.setCanModifyParam();
 			}
 			else {
 				response.setContentType("text/html; charset=UTF-8");

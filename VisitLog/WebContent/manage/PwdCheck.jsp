@@ -10,7 +10,7 @@
 <h1>비밀번호 확인 절차</h1>
 <form action='pwdCheck' method='post'>
 Email: <input type='text' name='email' value='${log.email}' readonly><br>
-Password:  <input type='text' name='password'><br>
+Password:  <input type='password' name='password'><br>
 <input type='submit' name='제출' value='승인 요청'>
 <input type='button' name='취소' value='취소' onclick='location.href="../visitlog/mainpage"'>
 </form>

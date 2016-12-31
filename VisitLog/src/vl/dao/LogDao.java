@@ -12,9 +12,23 @@ import vl.vo.Log;
 
 public class LogDao {
 	Connection connection;
+	protected boolean modifyParam = false;
 	
 	public void setConnection(Connection conn){
 		this.connection = conn;
+	}
+	
+	public void setCanModifyParam(){
+		modifyParam = true;
+	}
+	
+	public boolean getCanModifyParam(){
+		if(modifyParam == true){
+			modifyParam = false;
+			return true;
+		}
+		else
+			return false;
 	}
 	
 	public ArrayList<Log> selectLog() throws Exception{
@@ -46,18 +60,29 @@ public class LogDao {
 		}
 	}
 	
-	public int enterNewLog(Log log) throws Exception{
+	public boolean enterNewLog(Log log) throws Exception{
 		PreparedStatement stmt = null;
+		Statement stmt2 = null;
+		ResultSet rs = null;
 		
 		try{
-			stmt = connection.prepareStatement(
-					"INSERT INTO visitlist(EMAIL,PWD,BODY,CRE_DATE,MOD_DATE)"
-					+ " value(?,?,?,now(),now())");
-			stmt.setString(1, log.getEmail());
-			stmt.setString(2, log.getPassword());
-			stmt.setString(3, log.getBody());
+			stmt2 = connection.createStatement();
+			rs = stmt2.executeQuery("SELECT * FROM visitlist where EMAIL=" + "\"" + log.getEmail() + "\"");
+			if(!rs.next()){
+				stmt = connection.prepareStatement(
+						"INSERT INTO visitlist(EMAIL,PWD,BODY,CRE_DATE,MOD_DATE)"
+						+ " value(?,?,?,now(),now())");
+				stmt.setString(1, log.getEmail());
+				stmt.setString(2, log.getPassword());
+				stmt.setString(3, log.getBody());
 			
-			return stmt.executeUpdate();
+				stmt.executeUpdate();
+				
+				return true;
+			}
+			else{
+				return false;
+			}
 			
 		} catch(Exception e){
 			throw e;
@@ -108,7 +133,7 @@ public class LogDao {
 			
 			if(rs.next()){
 				log = new Log();
-				log.setEmail(rs.getString("EMAIL")).setNo(rs.getInt("MNO"));
+				log.setEmail(rs.getString("EMAIL")).setNo(rs.getInt("MNO")).setBody(rs.getString("BODY"));
 			}
 			
 			return log;
@@ -134,6 +159,24 @@ public class LogDao {
 			stmt.executeUpdate();
 			
 		} catch (Exception e){
+			throw e;
+			
+		} finally {
+			try {if (stmt != null) stmt.close();} catch(Exception e) {}
+		}
+	}
+	
+	public void deleteLog(int no) throws Exception{
+		PreparedStatement stmt = null;
+		
+		try{
+			stmt = connection.prepareStatement(
+					"DELETE FROM visitlist where MNO=?");
+			stmt.setInt(1, no);
+			
+			stmt.executeUpdate();
+			
+		} catch(Exception e){
 			throw e;
 			
 		} finally {

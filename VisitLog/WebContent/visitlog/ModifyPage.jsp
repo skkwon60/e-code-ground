@@ -21,10 +21,11 @@ padding:.8em .5em;}</style>
 <form action='modify' method='post'>
 ${sessionScope.log.email}<br>
 <div class='textbox'>
-<textarea name='body' cols='50' rows='20' wrap='hard'></textarea>
+<textarea name='body' cols='50' rows='20' wrap='hard'>${sessionScope.log.body}</textarea>
 </div>
 <input type='hidden' name='no' value='${sessionScope.log.no}'>
 <input type='submit' name='변경' value='변경'>
+<input type='button' value='방명록 삭제' onclick='location.href="delete?no=${sessionScope.log.no}"'>
 </form>
 <% session.invalidate(); %>
 </body>

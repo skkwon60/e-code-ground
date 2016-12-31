@@ -36,7 +36,10 @@ public class MainPage extends HttpServlet{
 			rd.include(request, response);
 
 		} catch(Exception e) {
-			//e.printStackTrace();
+			e.printStackTrace();
+			response.setContentType("text/html; charset=UTF-8");
+			RequestDispatcher rd = request.getRequestDispatcher("/DKnowError.jsp");
+			rd.forward(request, response);
 		}
 	}
 }

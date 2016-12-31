@@ -42,13 +42,18 @@ public class LogModify extends HttpServlet {
 			ServletContext sc = this.getServletContext();
 			LogDao logDao = (LogDao)sc.getAttribute("LogDao");
 			
-			System.out.println("AppInitServlet 준비…2");
-			
-			logDao.modifyBody(new Log()
-					.setBody(request.getParameter("body"))
-					.setNo(Integer.parseInt(request.getParameter("no"))));
-			
-			response.sendRedirect("mainpage");
+			if(logDao.getCanModifyParam()){
+				logDao.modifyBody(new Log()
+						.setBody(request.getParameter("body"))
+						.setNo(Integer.parseInt(request.getParameter("no"))));
+				
+				response.sendRedirect("mainpage");
+			}
+			else{
+				response.setContentType("text/html; charset=UTF-8");
+				RequestDispatcher rd = request.getRequestDispatcher("/ModifyFail.jsp");
+				rd.forward(request, response);
+			}
 			
 		} catch (Exception e){
 			e.printStackTrace();
